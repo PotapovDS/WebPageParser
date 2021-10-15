@@ -4,22 +4,26 @@ import org.jsoup.nodes.Document;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.regex.PatternSyntaxException;
 
 class WebPageParser {
 
+    public static String ReadUrlFromUser(){
+        Scanner in = new Scanner(System.in);
+        System.out.print("Введите адресс: ");
+        String url = in.nextLine();
+        return url;
+    }
+
     public static String DownloadWebPageText(String webpage) throws PatternSyntaxException {
         try {
-
             Document doc = Jsoup.connect(webpage).get();
-            System.out.println("title - " + doc.title());
             String text = doc.body().text();
             return text;
 
-        } catch (PatternSyntaxException ie) {
-            System.out.println("IOException raised:" + ie);
-        } catch (IOException ie) {
-            System.out.println("IOException raised:" + ie);
+        } catch (PatternSyntaxException | IOException ie) {
+            System.out.println("Exception raised:" + ie);
         }
         return "";
     }
@@ -46,7 +50,7 @@ class WebPageParser {
     }
 
     public static void main(String[] args) throws IOException {
-        String url = "http://www.yandex.ru";
+        String url = ReadUrlFromUser();
         String text = DownloadWebPageText(url);
         WordsCount(text);
     }
