@@ -5,25 +5,24 @@ import org.jsoup.nodes.Document;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.regex.PatternSyntaxException;
 
 class WebPageParser {
 
     public static String ReadUrlFromUser(){
         Scanner in = new Scanner(System.in);
-        System.out.print("Введите адресс: ");
+        System.out.print("Введите адресс в формате http://www.address.com :");
         String url = in.nextLine();
         return url;
     }
 
-    public static String DownloadWebPageText(String webpage) throws PatternSyntaxException {
+    public static String DownloadWebPageText(String webpage) throws IllegalArgumentException {
         try {
             Document doc = Jsoup.connect(webpage).get();
             String text = doc.body().text();
             return text;
 
-        } catch (PatternSyntaxException | IOException ie) {
-            System.out.println("Exception raised:" + ie);
+        } catch (IllegalArgumentException | IOException ie) {
+            System.out.println("Exception raised: введен некорректный адресс" + ie);
         }
         return "";
     }
@@ -52,6 +51,10 @@ class WebPageParser {
     public static void main(String[] args) throws IOException {
         String url = ReadUrlFromUser();
         String text = DownloadWebPageText(url);
-        WordsCount(text);
+        if (text.isEmpty()){
+            System.out.println("На указанном адресе текста не найдено");
+        } else {
+            WordsCount(text);
+        }
     }
 }
