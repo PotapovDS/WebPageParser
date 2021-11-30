@@ -5,14 +5,33 @@ import org.jsoup.nodes.Document;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.PatternSyntaxException;
 
 class WebPageParser {
 
     public static String ReadUrlFromUser(){
         Scanner in = new Scanner(System.in);
-        System.out.print("Введите адресс в формате http://www.address.com :");
-        String url = in.nextLine();
-        return url;
+        String url = new String();
+        while (url.length() == 0) {
+            System.out.print("Введите адресс в формате http://wwww.adress.aaa\n Для выхода из программы введите 'exit' \n :");
+            url = in.nextLine();
+            System.out.println(url);
+
+            if (url.toLowerCase() == "exit") {
+                System.out.println("Выход из программы");
+                System.exit(0);
+            }
+
+            if (url.matches("http://www\\.+.+\\.+.*")) {
+                return url;
+            } else if (url.matches("www\\.+\\w+\\.+\\w*")) {
+                return "http://" + url;
+            } else {
+                System.out.println("неверный формат: ");
+                url = "";
+            }
+        }
+        return "";
     }
 
     public static String DownloadWebPageText(String webpage) throws IllegalArgumentException {
@@ -28,7 +47,7 @@ class WebPageParser {
     }
 
     public static void WordsCount(String text){
-        String[] words = text.split("[{',.!?%°©\";:/|«»[',]=()+\\d\\n\\r\\t\\h\\v\\s}]");
+        String[] words = text.split("[{',.!?%°©*#\";:/|«»[',]=()+\\d\\n\\r\\t\\h\\v\\s}]");
         HashMap<String, Integer> wordsCount = new HashMap<>();
 
         for (String word : words){
